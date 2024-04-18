@@ -5,6 +5,8 @@ services:
       context: .
       dockerfile: ./Dockerfile
     env_file: ./.env
+    environment:
+      DB_HOST: mongo
     depends_on:
       mongo:
         condition: service_healthy

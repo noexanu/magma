@@ -4,8 +4,6 @@ import { config } from './config';
 
 const isDev = path.dirname(__dirname).split(path.sep).pop() === 'src';
 
-console.log(__dirname)
-
 export const databaseConfig: DataSourceOptions = {
   type: 'mongodb',
   host: config.DB_HOST,
