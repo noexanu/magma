@@ -1,0 +1,25 @@
+version: "2.2"
+services:
+  userservice:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    env_file: ./.env
+    depends_on:
+      mongo:
+        condition: service_healthy
+    command: node index.js
+    ports:
+      - 8080:8080
+
+  mongo:
+    image: mongo:6-jammy
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      timeout: 5s
+      retries: 5
+    restart: on-failure
+    ports:
+      - 27017:27017
+    volumes:
+      - "/var/lib/mongo/data"
