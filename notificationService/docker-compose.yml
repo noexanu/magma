@@ -1,18 +1,16 @@
 version: "2.2"
+
 services:
   notificationservice:
     build:
       context: .
       dockerfile: ./Dockerfile
     env_file: ./.env
-    environment:
-      RABBITMQ_URL: amqp://rabbitmq
     depends_on:
       rabbitmq:
         condition: service_healthy
     command: node index.js
-    ports:
-      - 8080:8080
+    network_mode: host
 
   rabbitmq:
     image: rabbitmq:3.8-management-alpine

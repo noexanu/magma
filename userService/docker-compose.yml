@@ -1,18 +1,31 @@
 version: "2.2"
+
 services:
   userservice:
     build:
       context: .
       dockerfile: ./Dockerfile
     env_file: ./.env
-    environment:
-      DB_HOST: mongo
     depends_on:
+      rabbitmq:
+        condition: service_healthy
       mongo:
         condition: service_healthy
     command: node index.js
+    network_mode: host
+
+  rabbitmq:
+    image: rabbitmq:3.8-management-alpine
+    healthcheck:
+      test: [ 'CMD', 'rabbitmq-diagnostics', '-q', 'status' ]
+      timeout: 5s
+      retries: 5
+    restart: on-failure
     ports:
-      - 8080:8080
+      # The standard AMQP protocol port
+      - '5672:5672'
+      # HTTP management UI
+      - '15672:15672'
 
   mongo:
     image: mongo:6-jammy

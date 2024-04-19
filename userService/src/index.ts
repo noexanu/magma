@@ -11,18 +11,18 @@ const bootstrap = async (): Promise<void> => {
   const { PORT: port } = config;
   const app = express();
 
-  await initServices();
+  const [{ closeAMQP, sendMessage }] = await initServices();
 
   app.set('trust proxy', 'loopback');
   app.use(helmet());
   app.use(cors({ origin: true }));
   app.use(express.json());
-  app.use('/api/v1', createV1Router());
+  app.use('/api/v1', createV1Router(sendMessage));
   app.use(errorHandlerMiddleware);
 
   const server = app.listen(port);
 
-  initGracefulExit(server);
+  initGracefulExit(server, closeAMQP);
 
   logger.info('Started', { port });
 };

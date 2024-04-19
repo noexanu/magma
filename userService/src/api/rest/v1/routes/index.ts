@@ -1,10 +1,13 @@
 import { Router } from 'express';
 import { UserService } from '../../../../services';
+import { AMQPService } from '../../../../services/AMQPService';
+import { AMQPSender } from '../../../../utils';
 import { createHealthRouter } from './Health.route';
 import { createUserRouter } from './User.route';
 
-export const createRouter = (): Router => {
-  const userService = new UserService();
+export const createRouter = (sendMessage: AMQPSender): Router => {
+  const amqpService = new AMQPService(sendMessage);
+  const userService = new UserService(amqpService);
 
   const router = Router();
 
