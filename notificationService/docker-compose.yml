@@ -6,9 +6,9 @@ services:
       context: .
       dockerfile: ./Dockerfile
     env_file: ./.env
-    depends_on:
-      rabbitmq:
-        condition: service_healthy
+    # depends_on:
+    #   rabbitmq:
+    #     condition: service_healthy
     command: node index.js
     network_mode: host
 
